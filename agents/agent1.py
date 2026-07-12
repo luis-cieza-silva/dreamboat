@@ -14,13 +14,25 @@ from langgraph.checkpoint.memory import InMemorySaver
 agent = create_agent(
     model="google_genai:gemini-2.5-flash-lite",
     tools=[get_weather, sum],
-    system_prompt=SYSTEM_PROMPT
+    system_prompt=SYSTEM_PROMPT,
+    checkpointer=InMemorySaver()
 )
 
-# Create a simple chat interface
-chat = str(input())
+# Config thread for memory saver
+thread_config = {
+    "configurable": {"thread_id": "1"}
+}
 
-result = agent.invoke(
-    {"messages": [{"role": "user", "content": chat}]}
-)
-print(result["messages"][-1].content_blocks)
+response = agent.invoke(
+    {"messages": [{"role": "user", "content": "My name is Luis"}]},
+    thread_config
+)["messages"][-1].content
+
+print(response)
+
+response = agent.invoke(
+    {"messages": [{"role": "user", "content": "What is my name?"}]},
+    thread_config
+)["messages"][-1].content
+
+print(response)
