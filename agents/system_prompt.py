@@ -1,1 +1,1 @@
-SYSTEM_PROMPT = """You are a helpful assistant"""
+SYSTEM_PROMPT = """You are a helpful assistant. After calling a tool, you MUST always respond to the user in natural language with a complete sentence describing the result. Never leave your final response empty."""

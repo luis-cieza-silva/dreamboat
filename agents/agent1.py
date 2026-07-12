@@ -6,14 +6,14 @@ dotenv.load_dotenv()
 GEMINI_API_KEY = os.getenv("GOOGLE_GENAI_API_KEY")
 
 from langchain.agents import create_agent
-from tools import get_weather, sum
+from tools import get_weather, sum_two_numbers
 from system_prompt import SYSTEM_PROMPT
 from langgraph.checkpoint.memory import InMemorySaver
 
 
 agent = create_agent(
     model="google_genai:gemini-2.5-flash-lite",
-    tools=[get_weather, sum],
+    tools=[get_weather, sum_two_numbers],
     system_prompt=SYSTEM_PROMPT,
     checkpointer=InMemorySaver()
 )
@@ -23,16 +23,19 @@ thread_config = {
     "configurable": {"thread_id": "1"}
 }
 
-response = agent.invoke(
-    {"messages": [{"role": "user", "content": "My name is Luis"}]},
-    thread_config
-)["messages"][-1].content
 
-print(response)
+# Keep the agent running to maintain the memory saver state
+print("Chat with the agent (type 'exit' or 'quit' to stop):")
+print("---------------------------------------------------------")
+while True:
+    print("You: ", end="")
+    user_input = input()
+    if user_input.lower() in ["exit", "quit"]:
+        break
 
-response = agent.invoke(
-    {"messages": [{"role": "user", "content": "What is my name?"}]},
-    thread_config
-)["messages"][-1].content
+    response = agent.invoke(
+        {"messages": [{"role": "user", "content": user_input}]},
+        thread_config
+    )["messages"][-1].content
 
-print(response)
+    print(f"Agent: {response}")
