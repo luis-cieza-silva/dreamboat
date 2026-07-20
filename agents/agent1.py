@@ -6,15 +6,15 @@ dotenv.load_dotenv()
 GEMINI_API_KEY = os.getenv("GOOGLE_GENAI_API_KEY")
 
 from langchain.agents import create_agent
-from tools import get_weather, sum_two_numbers
-from system_prompt import SYSTEM_PROMPT
+from tools import get_datero_data
+from system_prompt import DATERO_STATS_SYSTEM_PROMPT
 from langgraph.checkpoint.memory import InMemorySaver
 
 
 agent = create_agent(
-    model="google_genai:gemini-2.5-flash-lite",
-    tools=[get_weather, sum_two_numbers],
-    system_prompt=SYSTEM_PROMPT,
+    model="google_genai:gemini-2.5-flash",
+    tools=[get_datero_data],
+    system_prompt=DATERO_STATS_SYSTEM_PROMPT,
     checkpointer=InMemorySaver()
 )
 
@@ -37,5 +37,10 @@ while True:
         {"messages": [{"role": "user", "content": user_input}]},
         thread_config
     )["messages"][-1].content
+
+    if isinstance(response, list):
+        response = "".join(
+            block.get("text", "") for block in response if isinstance(block, dict)
+        )
 
     print(f"Agent: {response}")
