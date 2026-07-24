@@ -274,6 +274,8 @@ dependencies = [
     { name = "dotenv" },
     { name = "kagglehub", extra = ["pandas-datasets"] },
     { name = "langchain", extra = ["google-genai"] },
+    { name = "pandas" },
+    { name = "requests" },
 ]
 
 [package.metadata]
@@ -281,6 +283,8 @@ requires-dist = [
     { name = "dotenv", specifier = ">=0.9.9" },
     { name = "kagglehub", extras = ["pandas-datasets"], specifier = ">=1.0.2" },
     { name = "langchain", extras = ["google-genai"], specifier = ">=1.3.13" },
+    { name = "pandas", specifier = ">=3.0.3" },
+    { name = "requests", specifier = ">=2.34.2" },
 ]
 
 [[package]]
